@@ -1,6 +1,7 @@
 import lnService from 'ln-service';
 import bitcoin from 'bitcoin';
 import * as dotenv from 'dotenv'
+import { CalculateTotalFeesEarned, CalculateTotalForwardAmount } from './forwards.js';
 dotenv.config();
 
 let client = new bitcoin.Client({

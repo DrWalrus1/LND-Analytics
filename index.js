@@ -1,7 +1,6 @@
 import lnService from 'ln-service';
 import * as dotenv from 'dotenv';
 dotenv.config();
-import { CalculateTotalFeesEarned, CalculateTotalForwardAmount } from './src/forwards.js';
 import { getChannelAge, calculateChannelNumbers } from './src/channels.js';
 
 const { lnd } = lnService.authenticatedLndGrpc({
@@ -32,7 +31,7 @@ let totalOutgoing = 0;
 // Calculate total fees and forwarding amount
 for (let i = 0; i < channels.length; i++) {
     channels[i] = calculateChannelNumbers(channels[i]);
-    
+
     totalFeesEarned += channels[i].feesEarned;
     totalOutgoing += channels[i].outgoing_forwards.length;
 };
@@ -51,5 +50,5 @@ for (let i = 0; i < channels.length; i++) {
     Profit: ${channels[i].current_profit}`);
 }
 
-console.log(`Total Fees Earned: ${totalFeesEarned} sats`);
+console.log(`Total Fees Earned: ${totalFeesEarned.toFixed(2)} sats`);
 console.log(`Total Forwards: ${totalOutgoing}`);
