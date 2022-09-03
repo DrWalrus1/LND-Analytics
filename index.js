@@ -35,6 +35,11 @@ for (let i = 0; i < channels.length; i++) {
     channels[i].totalForwarded = CalculateTotalForwardAmount(channels[i].outgoing_forwards);
     channels[i].averageFeeEarned = (channels[i].feesEarned / channels[i].outgoing_forwards.length).toLocaleString();
     channels[i].averageForwardAmount = (channels[i].totalForwarded / channels[i].outgoing_forwards.length).toLocaleString();
+    if (!channels[i].is_partner_initiated)
+    // TODO: Fix when blockchain is synced -> get onchain fee by getting raw transaction
+        channels[i].current_profit = channels[i].feesEarned - 213;
+    else
+        channels[i].current_profit = channels[i].feesEarned;
     totalFeesEarned += channels[i].feesEarned;
     totalOutgoing += channels[i].outgoing_forwards.length;
 };
@@ -49,7 +54,8 @@ for (let i = 0; i < channels.length; i++) {
     Total Amount Forwarded: ${channels[i].totalForwarded.toLocaleString()} sats
     Total Fees Earned: ${channels[i].feesEarned.toLocaleString()} sats
     Average Fee per Forward: ${channels[i].averageFeeEarned}
-    Average Forward Amount: ${channels[i].averageForwardAmount}`);
+    Average Forward Amount: ${channels[i].averageForwardAmount}
+    Profit: ${channels[i].current_profit}`);
 }
 
 console.log(`Total Fees Earned: ${totalFeesEarned} sats`);
