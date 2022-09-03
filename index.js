@@ -2,7 +2,7 @@ import lnService from 'ln-service';
 import * as dotenv from 'dotenv';
 dotenv.config();
 import { CalculateTotalFeesEarned, CalculateTotalForwardAmount } from './src/forwards.js';
-import { getChannelAge } from './src/channels.js';
+import { getChannelAge, calculateChannelNumbers } from './src/channels.js';
 
 const { lnd } = lnService.authenticatedLndGrpc({
     cert: process.env.CERT,
@@ -31,15 +31,8 @@ let totalFeesEarned = 0;
 let totalOutgoing = 0;
 // Calculate total fees and forwarding amount
 for (let i = 0; i < channels.length; i++) {
-    channels[i].feesEarned = CalculateTotalFeesEarned(channels[i].outgoing_forwards);
-    channels[i].totalForwarded = CalculateTotalForwardAmount(channels[i].outgoing_forwards);
-    channels[i].averageFeeEarned = (channels[i].feesEarned / channels[i].outgoing_forwards.length).toLocaleString();
-    channels[i].averageForwardAmount = (channels[i].totalForwarded / channels[i].outgoing_forwards.length).toLocaleString();
-    if (!channels[i].is_partner_initiated)
-    // TODO: Fix when blockchain is synced -> get onchain fee by getting raw transaction
-        channels[i].current_profit = channels[i].feesEarned - 213;
-    else
-        channels[i].current_profit = channels[i].feesEarned;
+    channels[i] = calculateChannelNumbers(channels[i]);
+    
     totalFeesEarned += channels[i].feesEarned;
     totalOutgoing += channels[i].outgoing_forwards.length;
 };
