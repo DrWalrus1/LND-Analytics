@@ -29,10 +29,12 @@ for (let i = 0; i < channels.length; i++) {
 
 let totalFeesEarned = 0;
 let totalOutgoing = 0;
-// Calculate total fees and forwarding amoutn
+// Calculate total fees and forwarding amount
 for (let i = 0; i < channels.length; i++) {
     channels[i].feesEarned = CalculateTotalFeesEarned(channels[i].outgoing_forwards);
     channels[i].totalForwarded = CalculateTotalForwardAmount(channels[i].outgoing_forwards);
+    channels[i].averageFeeEarned = (channels[i].feesEarned / channels[i].outgoing_forwards.length).toLocaleString();
+    channels[i].averageForwardAmount = (channels[i].totalForwarded / channels[i].outgoing_forwards.length).toLocaleString();
     totalFeesEarned += channels[i].feesEarned;
     totalOutgoing += channels[i].outgoing_forwards.length;
 };
@@ -45,7 +47,9 @@ for (let i = 0; i < channels.length; i++) {
     Incoming Forwards: ${channels[i].incoming_forwards.length}
     Outgoing Forwards: ${channels[i].outgoing_forwards.length}
     Total Amount Forwarded: ${channels[i].totalForwarded.toLocaleString()} sats
-    Total Fees Earned: ${channels[i].feesEarned.toLocaleString()} sats`);
+    Total Fees Earned: ${channels[i].feesEarned.toLocaleString()} sats
+    Average Fee per Forward: ${channels[i].averageFeeEarned}
+    Average Forward Amount: ${channels[i].averageForwardAmount}`);
 }
 
 console.log(`Total Fees Earned: ${totalFeesEarned} sats`);
